@@ -48,6 +48,8 @@ h1 {
     font-size: 1rem;
 }
 
+/* 3-D CARD STAGE */
+
 .stage {
     width: min(900px, 92vw);
     perspective: 1400px;
@@ -62,34 +64,66 @@ h1 {
     transform-style: preserve-3d;
 }
 
-/* INSIDE MESSAGE */
+/*
+   NATURAL-WHITE CARD STOCK COLOR
+   Change this one value later if desired.
+*/
+
+:root {
+    --card-stock: #f4f0e5;
+    --card-edge: #ddd5c4;
+    --card-inset: 4.5%;
+}
+
+/* INSIDE OF PHYSICAL CARD */
 
 .inside {
     position: absolute;
     inset: 0;
 
-    background: white;
+    background: var(--card-stock);
+
+    border: 1px solid var(--card-edge);
     border-radius: 8px;
+
+    padding: var(--card-inset);
+
     overflow: hidden;
 
     box-shadow:
         0 20px 55px rgba(0,0,0,.65);
 }
 
+/* INSIDE MESSAGE INSERT */
+
 .inside img {
     display: block;
+
     width: 100%;
     height: 100%;
+
     object-fit: contain;
+
+    background: white;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.16);
 }
 
-/* FRONT COVER */
+/* FRONT COVER / PHYSICAL CARD STOCK */
 
 .cover {
     position: absolute;
     inset: 0;
 
     z-index: 10;
+
+    background: var(--card-stock);
+
+    border: 1px solid var(--card-edge);
+    border-radius: 8px;
+
+    padding: var(--card-inset);
 
     transform-origin: center top;
     transform: rotateX(0deg);
@@ -102,25 +136,24 @@ h1 {
     opacity: 1;
 
     /*
-       Three-second opening.
-
-       Opacity remains solid through most
-       of the opening, then fades away.
+       3-second opening.
+       Cover fades away near the end.
     */
+
     transition:
         transform 3s cubic-bezier(.35,.05,.20,1),
         opacity .45s ease 2.15s,
         box-shadow 3s ease;
 
-    border-radius: 8px;
-    overflow: hidden;
-
     box-shadow:
         0 18px 40px rgba(0,0,0,.65);
 }
 
+/* FRONT ARTWORK */
+
 .cover img {
     display: block;
+
     width: 100%;
     height: 100%;
 
@@ -128,23 +161,22 @@ h1 {
 
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.17);
 }
 
-/* OPEN */
+/* OPEN POSITION */
 
 .card.open .cover {
     transform: rotateX(115deg);
-
-    /*
-       This guarantees the cover disappears.
-    */
     opacity: 0;
 
     box-shadow:
         0 -12px 32px rgba(0,0,0,.35);
 }
 
-/* SHADOW */
+/* OPENING SHADOW */
 
 .cover-shadow {
     position: absolute;
@@ -198,7 +230,7 @@ h1 {
     opacity: 1;
 }
 
-/* KEYBOARD FOCUS */
+/* KEYBOARD ACCESSIBILITY */
 
 .card:focus-visible {
     outline: 3px solid #f5c768;
@@ -223,7 +255,7 @@ h1 {
     }
 }
 
-/* REDUCED MOTION */
+/* REDUCED-MOTION ACCESSIBILITY */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -258,7 +290,7 @@ h1 {
         aria-label="Open Thinking of You card"
     >
 
-        <!-- INSIDE MESSAGE -->
+        <!-- INSIDE CARD WITH NATURAL-WHITE PERIMETER -->
 
         <div class="inside">
 
@@ -273,7 +305,7 @@ h1 {
 
         <div class="cover-shadow"></div>
 
-        <!-- FRONT COVER -->
+        <!-- FRONT CARD WITH NATURAL-WHITE PERIMETER -->
 
         <div class="cover">
 
@@ -297,6 +329,7 @@ const card =
 
 const instruction =
     document.getElementById("instruction");
+
 
 function toggleCard() {
 
@@ -336,10 +369,12 @@ function toggleCard() {
     }
 }
 
+
 card.addEventListener(
     "click",
     toggleCard
 );
+
 
 card.addEventListener(
     "keydown",
