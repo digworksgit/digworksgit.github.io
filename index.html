@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Thinking of You</title>
+<title>DignityWorks Card Gallery</title>
 
 <style>
 
@@ -13,18 +13,13 @@
 }
 
 :root {
-    /* Warm natural-white card stock */
+    --background-dark: #02080d;
+    --background-blue: #0b3043;
+    --text-main: #ffffff;
+    --text-soft: #c8dcea;
+    --text-muted: #9fc0d2;
     --card-stock: #f2ede1;
-
-    /* Slightly darker physical edge */
     --card-edge: #d8d0bf;
-
-    /*
-       Visible card-stock perimeter.
-       Increase this number for more cream border.
-       Decrease it for less.
-    */
-    --frame: 5%;
 }
 
 body {
@@ -33,178 +28,122 @@ body {
 
     background:
         radial-gradient(
-            circle at center,
+            circle at top center,
             #174b66 0%,
-            #071723 55%,
+            #071723 48%,
             #02080d 100%
         );
 
     font-family: Arial, Helvetica, sans-serif;
-    color: white;
+    color: var(--text-main);
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    padding: 40px 24px 70px;
+}
 
-    padding: 25px;
-    overflow-x: hidden;
+/* PAGE HEADER */
+
+header {
+    max-width: 1100px;
+    margin: 0 auto 45px;
+    text-align: center;
 }
 
 h1 {
+    margin: 0 0 10px;
+    font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 300;
-    font-size: 1.5rem;
-    margin: 0 0 8px;
+    letter-spacing: .02em;
 }
 
-.instructions {
-    color: #c8dcea;
-    margin-bottom: 22px;
-    font-size: 1rem;
+.subtitle {
+    margin: 0 auto;
+    max-width: 650px;
+
+    color: var(--text-soft);
+
+    font-size: 1.05rem;
+    line-height: 1.6;
 }
 
-/* 3-D STAGE */
+/* GALLERY */
 
-.stage {
-    width: min(900px, 92vw);
-    perspective: 1400px;
-    padding-top: 20px;
+.gallery {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 32px;
 }
 
-/*
-   THE PHYSICAL LANDSCAPE CARD
-*/
+/* MONTH CARD */
 
-.card {
-    width: 100%;
-    aspect-ratio: 7 / 5;
-
-    position: relative;
-
-    cursor: pointer;
-
-    transform-style: preserve-3d;
-}
-
-/*
-   INSIDE OF CARD
-*/
-
-.inside {
-    position: absolute;
-    inset: 0;
-
-    background: var(--card-stock);
-
-    border: 2px solid var(--card-edge);
-    border-radius: 8px;
-
-    box-shadow:
-        0 20px 55px rgba(0,0,0,.65),
-        inset 0 0 12px rgba(80,65,40,.08);
-
-    overflow: hidden;
-}
-
-/*
-   MESSAGE INSERT
-
-   This is deliberately smaller than
-   the physical card so that the cream
-   card stock remains visible around it.
-*/
-
-.inside-image-frame {
-    position: absolute;
-
-    top: var(--frame);
-    right: var(--frame);
-    bottom: var(--frame);
-    left: var(--frame);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: white;
-
-    box-shadow:
-        0 2px 9px rgba(0,0,0,.18);
-}
-
-.inside-image-frame img {
+.month-card {
     display: block;
 
-    width: 100%;
-    height: 100%;
+    color: inherit;
+    text-decoration: none;
 
-    object-fit: contain;
-}
+    background:
+        rgba(255,255,255,.045);
 
-/*
-   FRONT COVER
+    border:
+        1px solid rgba(255,255,255,.10);
 
-   The cream rectangle itself represents
-   the physical Natural White card stock.
-*/
+    border-radius: 14px;
 
-.cover {
-    position: absolute;
-    inset: 0;
-
-    z-index: 10;
-
-    background: var(--card-stock);
-
-    border: 2px solid var(--card-edge);
-    border-radius: 8px;
-
-    transform-origin: center top;
-    transform: rotateX(0deg);
-
-    transform-style: preserve-3d;
-
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-
-    opacity: 1;
+    padding: 20px;
 
     transition:
-        transform 3s cubic-bezier(.35,.05,.20,1),
-        opacity .45s ease 2.15s,
-        box-shadow 3s ease;
+        transform .3s ease,
+        background .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+}
+
+.month-card:hover,
+.month-card:focus-visible {
+    transform: translateY(-5px);
+
+    background:
+        rgba(255,255,255,.075);
+
+    border-color:
+        rgba(159,192,210,.45);
 
     box-shadow:
-        0 18px 40px rgba(0,0,0,.65),
-        inset 0 0 12px rgba(80,65,40,.08);
+        0 18px 45px rgba(0,0,0,.35);
+}
+
+.month-card:focus-visible {
+    outline: 3px solid #f5c768;
+    outline-offset: 5px;
+}
+
+/* PHYSICAL CARD THUMBNAIL */
+
+.thumbnail-card {
+    background: var(--card-stock);
+
+    border:
+        2px solid var(--card-edge);
+
+    border-radius: 7px;
+
+    padding: 5%;
+
+    aspect-ratio: 7 / 5;
+
+    box-shadow:
+        0 10px 28px rgba(0,0,0,.45);
 
     overflow: hidden;
 }
 
-/*
-   FRONT ARTWORK FRAME
-
-   The bridge photograph does NOT fill
-   the whole physical card.
-*/
-
-.cover-image-frame {
-    position: absolute;
-
-    top: var(--frame);
-    right: var(--frame);
-    bottom: var(--frame);
-    left: var(--frame);
-
-    background: #111;
-
-    box-shadow:
-        0 2px 9px rgba(0,0,0,.20);
-
-    overflow: hidden;
-}
-
-.cover-image-frame img {
+.thumbnail-card img {
     display: block;
 
     width: 100%;
@@ -212,130 +151,110 @@ h1 {
 
     object-fit: cover;
 
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-/*
-   OPEN POSITION
-*/
-
-.card.open .cover {
-    transform: rotateX(115deg);
-
-    /*
-       Guaranteed disappearance near
-       the end of the opening motion.
-    */
-    opacity: 0;
-
     box-shadow:
-        0 -12px 32px rgba(0,0,0,.35);
+        0 2px 7px rgba(0,0,0,.22);
 }
 
-/*
-   OPENING SHADOW
-*/
+/* MONTH INFORMATION */
 
-.cover-shadow {
-    position: absolute;
-    inset: 0;
+.card-info {
+    padding: 20px 3px 5px;
+    text-align: center;
+}
 
-    z-index: 5;
+.month-name {
+    margin: 0 0 6px;
 
-    pointer-events: none;
+    font-size: 1.35rem;
+    font-weight: 400;
+}
+
+.theme {
+    margin: 0 0 15px;
+
+    color: var(--text-muted);
+
+    font-size: .98rem;
+}
+
+.open-card {
+    display: inline-block;
+
+    color: var(--text-soft);
+
+    font-size: .88rem;
+
+    border-bottom:
+        1px solid rgba(200,220,234,.45);
+
+    padding-bottom: 3px;
+}
+
+/* FUTURE MONTH PLACEHOLDER */
+
+.coming-soon {
+    opacity: .48;
+    cursor: default;
+}
+
+.coming-soon:hover {
+    transform: none;
+    background: rgba(255,255,255,.045);
+    box-shadow: none;
+    border-color: rgba(255,255,255,.10);
+}
+
+.placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    color: #6f7e84;
 
     background:
         linear-gradient(
-            to bottom,
-            rgba(0,0,0,.50),
-            rgba(0,0,0,.10) 45%,
-            transparent 85%
+            145deg,
+            #ece6d9,
+            #f7f3ea
         );
 
-    opacity: 0;
-
-    transition:
-        opacity 2s ease;
+    font-size: 1rem;
 }
 
-.card.open .cover-shadow {
-    opacity: .35;
+/* FOOTER */
+
+footer {
+    max-width: 900px;
+    margin: 55px auto 0;
+
+    text-align: center;
+
+    color: #7797a8;
+
+    font-size: .82rem;
 }
 
-/*
-   FOLD / HINGE
-*/
-
-.fold {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: 3px;
-
-    background:
-        rgba(255,255,255,.28);
-
-    opacity: 0;
-
-    transition:
-        opacity .6s ease;
-
-    z-index: 20;
-
-    pointer-events: none;
-}
-
-.card.open .fold {
-    opacity: 1;
-}
-
-/*
-   ACCESSIBILITY
-*/
-
-.card:focus-visible {
-    outline: 3px solid #f5c768;
-    outline-offset: 8px;
-    border-radius: 8px;
-}
-
-/*
-   PHONE / SMALL SCREEN
-*/
+/* PHONE */
 
 @media (max-width: 600px) {
 
     body {
-        padding: 15px;
+        padding:
+            28px 15px 50px;
     }
 
-    h1 {
-        font-size: 1.2rem;
+    header {
+        margin-bottom: 32px;
     }
 
-    .instructions {
-        font-size: .9rem;
+    .gallery {
+        gap: 22px;
     }
-
-    :root {
-        --frame: 4%;
-    }
-}
-
-/*
-   REDUCED MOTION
-*/
-
-@media (prefers-reduced-motion: reduce) {
-
-    .cover {
-        transition-duration: .2s;
-    }
-
 }
 
 </style>
@@ -343,142 +262,93 @@ h1 {
 
 <body>
 
-<h1>Thinking of You</h1>
+<header>
 
-<div
-    class="instructions"
-    id="instruction"
->
-    Click or tap the card to open
-</div>
+    <h1>DignityWorks Card Gallery</h1>
 
-<div class="stage">
+    <p class="subtitle">
+        A collection of monthly cards created to offer
+        connection, dignity, and a reminder that someone
+        is thinking of you.
+    </p>
 
-    <div
-        class="card"
-        id="card"
-        role="button"
-        tabindex="0"
-        aria-expanded="false"
-        aria-label="Open Thinking of You card"
+</header>
+
+
+<main class="gallery">
+
+    <!-- DECEMBER 2026 -->
+
+    <a
+        class="month-card"
+        href="cards/december/index.html"
+        aria-label="Open December 2026 Thinking of You card"
     >
 
-        <!-- INSIDE PHYSICAL CARD -->
+        <div class="thumbnail-card">
 
-        <div class="inside">
+            <img
+                src="Designer%20(1).jpg"
+                alt="December Thinking of You illuminated bridge card"
+            >
 
-            <div class="inside-image-frame">
+        </div>
 
-                <img
-                    src="Dec%20Inner%20Message%201.jpg"
-                    alt="Inside message"
-                >
+        <div class="card-info">
 
+            <h2 class="month-name">
+                December 2026
+            </h2>
+
+            <p class="theme">
+                Light &amp; Connection
+            </p>
+
+            <span class="open-card">
+                Open interactive card
+            </span>
+
+        </div>
+
+    </a>
+
+
+    <!-- JANUARY PLACEHOLDER -->
+
+    <div class="month-card coming-soon">
+
+        <div class="thumbnail-card">
+
+            <div class="placeholder">
+                January card coming soon
             </div>
 
         </div>
 
-        <!-- MOVING SHADOW -->
+        <div class="card-info">
 
-        <div class="cover-shadow"></div>
+            <h2 class="month-name">
+                January 2027
+            </h2>
 
-        <!-- FRONT PHYSICAL CARD -->
+            <p class="theme">
+                The Shared Moon
+            </p>
 
-        <div class="cover">
-
-            <div class="cover-image-frame">
-
-                <img
-                    src="Designer%20(1).jpg"
-                    alt="Thinking of You illuminated bridge card"
-                >
-
-            </div>
+            <span class="open-card">
+                Coming soon
+            </span>
 
         </div>
-
-        <!-- FOLD -->
-
-        <div class="fold"></div>
 
     </div>
 
-</div>
-
-<script>
-
-const card =
-    document.getElementById("card");
-
-const instruction =
-    document.getElementById("instruction");
+</main>
 
 
-function toggleCard() {
-
-    const open =
-        card.classList.toggle("open");
-
-    if (open) {
-
-        instruction.textContent =
-            "Click or tap again to close";
-
-        card.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-
-        card.setAttribute(
-            "aria-label",
-            "Close Thinking of You card"
-        );
-
-    } else {
-
-        instruction.textContent =
-            "Click or tap the card to open";
-
-        card.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        card.setAttribute(
-            "aria-label",
-            "Open Thinking of You card"
-        );
-
-    }
-
-}
-
-
-card.addEventListener(
-    "click",
-    toggleCard
-);
-
-
-card.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter" ||
-            event.key === " "
-        ) {
-
-            event.preventDefault();
-
-            toggleCard();
-
-        }
-
-    }
-);
-
-</script>
+<footer>
+    DignityWorks
+</footer>
 
 </body>
 </html>
