@@ -12,6 +12,21 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Warm natural-white card stock */
+    --card-stock: #f2ede1;
+
+    /* Slightly darker physical edge */
+    --card-edge: #d8d0bf;
+
+    /*
+       Visible card-stock perimeter.
+       Increase this number for more cream border.
+       Decrease it for less.
+    */
+    --frame: 5%;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -48,7 +63,7 @@ h1 {
     font-size: 1rem;
 }
 
-/* 3-D CARD STAGE */
+/* 3-D STAGE */
 
 .stage {
     width: min(900px, 92vw);
@@ -56,26 +71,24 @@ h1 {
     padding-top: 20px;
 }
 
+/*
+   THE PHYSICAL LANDSCAPE CARD
+*/
+
 .card {
     width: 100%;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 7 / 5;
+
     position: relative;
+
     cursor: pointer;
+
     transform-style: preserve-3d;
 }
 
 /*
-   NATURAL-WHITE CARD STOCK COLOR
-   Change this one value later if desired.
+   INSIDE OF CARD
 */
-
-:root {
-    --card-stock: #f4f0e5;
-    --card-edge: #ddd5c4;
-    --card-inset: 4.5%;
-}
-
-/* INSIDE OF PHYSICAL CARD */
 
 .inside {
     position: absolute;
@@ -83,34 +96,57 @@ h1 {
 
     background: var(--card-stock);
 
-    border: 1px solid var(--card-edge);
+    border: 2px solid var(--card-edge);
     border-radius: 8px;
 
-    padding: var(--card-inset);
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.65),
+        inset 0 0 12px rgba(80,65,40,.08);
 
     overflow: hidden;
-
-    box-shadow:
-        0 20px 55px rgba(0,0,0,.65);
 }
 
-/* INSIDE MESSAGE INSERT */
+/*
+   MESSAGE INSERT
 
-.inside img {
+   This is deliberately smaller than
+   the physical card so that the cream
+   card stock remains visible around it.
+*/
+
+.inside-image-frame {
+    position: absolute;
+
+    top: var(--frame);
+    right: var(--frame);
+    bottom: var(--frame);
+    left: var(--frame);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    box-shadow:
+        0 2px 9px rgba(0,0,0,.18);
+}
+
+.inside-image-frame img {
     display: block;
 
     width: 100%;
     height: 100%;
 
     object-fit: contain;
-
-    background: white;
-
-    box-shadow:
-        0 2px 8px rgba(0,0,0,.16);
 }
 
-/* FRONT COVER / PHYSICAL CARD STOCK */
+/*
+   FRONT COVER
+
+   The cream rectangle itself represents
+   the physical Natural White card stock.
+*/
 
 .cover {
     position: absolute;
@@ -120,10 +156,8 @@ h1 {
 
     background: var(--card-stock);
 
-    border: 1px solid var(--card-edge);
+    border: 2px solid var(--card-edge);
     border-radius: 8px;
-
-    padding: var(--card-inset);
 
     transform-origin: center top;
     transform: rotateX(0deg);
@@ -135,23 +169,42 @@ h1 {
 
     opacity: 1;
 
-    /*
-       3-second opening.
-       Cover fades away near the end.
-    */
-
     transition:
         transform 3s cubic-bezier(.35,.05,.20,1),
         opacity .45s ease 2.15s,
         box-shadow 3s ease;
 
     box-shadow:
-        0 18px 40px rgba(0,0,0,.65);
+        0 18px 40px rgba(0,0,0,.65),
+        inset 0 0 12px rgba(80,65,40,.08);
+
+    overflow: hidden;
 }
 
-/* FRONT ARTWORK */
+/*
+   FRONT ARTWORK FRAME
 
-.cover img {
+   The bridge photograph does NOT fill
+   the whole physical card.
+*/
+
+.cover-image-frame {
+    position: absolute;
+
+    top: var(--frame);
+    right: var(--frame);
+    bottom: var(--frame);
+    left: var(--frame);
+
+    background: #111;
+
+    box-shadow:
+        0 2px 9px rgba(0,0,0,.20);
+
+    overflow: hidden;
+}
+
+.cover-image-frame img {
     display: block;
 
     width: 100%;
@@ -161,28 +214,35 @@ h1 {
 
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-
-    box-shadow:
-        0 2px 8px rgba(0,0,0,.17);
 }
 
-/* OPEN POSITION */
+/*
+   OPEN POSITION
+*/
 
 .card.open .cover {
     transform: rotateX(115deg);
+
+    /*
+       Guaranteed disappearance near
+       the end of the opening motion.
+    */
     opacity: 0;
 
     box-shadow:
         0 -12px 32px rgba(0,0,0,.35);
 }
 
-/* OPENING SHADOW */
+/*
+   OPENING SHADOW
+*/
 
 .cover-shadow {
     position: absolute;
     inset: 0;
 
     z-index: 5;
+
     pointer-events: none;
 
     background:
@@ -203,7 +263,9 @@ h1 {
     opacity: .35;
 }
 
-/* FOLD LINE */
+/*
+   FOLD / HINGE
+*/
 
 .fold {
     position: absolute;
@@ -223,6 +285,7 @@ h1 {
         opacity .6s ease;
 
     z-index: 20;
+
     pointer-events: none;
 }
 
@@ -230,7 +293,9 @@ h1 {
     opacity: 1;
 }
 
-/* KEYBOARD ACCESSIBILITY */
+/*
+   ACCESSIBILITY
+*/
 
 .card:focus-visible {
     outline: 3px solid #f5c768;
@@ -238,7 +303,9 @@ h1 {
     border-radius: 8px;
 }
 
-/* SMALL SCREENS */
+/*
+   PHONE / SMALL SCREEN
+*/
 
 @media (max-width: 600px) {
 
@@ -253,9 +320,15 @@ h1 {
     .instructions {
         font-size: .9rem;
     }
+
+    :root {
+        --frame: 4%;
+    }
 }
 
-/* REDUCED-MOTION ACCESSIBILITY */
+/*
+   REDUCED MOTION
+*/
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -290,31 +363,41 @@ h1 {
         aria-label="Open Thinking of You card"
     >
 
-        <!-- INSIDE CARD WITH NATURAL-WHITE PERIMETER -->
+        <!-- INSIDE PHYSICAL CARD -->
 
         <div class="inside">
 
-            <img
-                src="Dec%20Inner%20Message%201.jpg"
-                alt="Inside message"
-            >
+            <div class="inside-image-frame">
+
+                <img
+                    src="Dec%20Inner%20Message%201.jpg"
+                    alt="Inside message"
+                >
+
+            </div>
 
         </div>
 
-        <!-- OPENING SHADOW -->
+        <!-- MOVING SHADOW -->
 
         <div class="cover-shadow"></div>
 
-        <!-- FRONT CARD WITH NATURAL-WHITE PERIMETER -->
+        <!-- FRONT PHYSICAL CARD -->
 
         <div class="cover">
 
-            <img
-                src="Designer%20(1).jpg"
-                alt="Thinking of You illuminated bridge card"
-            >
+            <div class="cover-image-frame">
+
+                <img
+                    src="Designer%20(1).jpg"
+                    alt="Thinking of You illuminated bridge card"
+                >
+
+            </div>
 
         </div>
+
+        <!-- FOLD -->
 
         <div class="fold"></div>
 
@@ -367,6 +450,7 @@ function toggleCard() {
         );
 
     }
+
 }
 
 
@@ -386,6 +470,7 @@ card.addEventListener(
         ) {
 
             event.preventDefault();
+
             toggleCard();
 
         }
