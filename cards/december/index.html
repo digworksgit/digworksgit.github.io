@@ -1,1 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>December 2026 - Thinking of You</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --card-stock: #f2ede1;
+    --card-edge: #d8d0bf;
+    --frame: 5%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #174b66 0%,
+            #071723 55%,
+            #02080d 100%
+        );
+
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 25px;
+    overflow-x: hidden;
+}
+
+h1 {
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin: 0 0 5px;
+}
+
+.month {
+    color: #9fc0d2;
+    font-size: .9rem;
+    margin-bottom: 10px;
+}
+
+.instructions {
+    color: #c8dcea;
+    margin-bottom: 22px;
+    font-size: 1rem;
+}
+
+/* 3-D STAGE */
+
+.stage {
+    width: min(900px, 92vw);
+    perspective: 1400px;
+    padding-top: 20px;
+}
+
+/* PHYSICAL 7 x 5 LANDSCAPE CARD */
+
+.card {
+    width: 100%;
+    aspect-ratio: 7 / 5;
+
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+}
+
+/* INSIDE CARD */
+
+.inside {
+    position: absolute;
+    inset: 0;
+
+    background: var(--card-stock);
+
+    border: 2px solid var(--card-edge);
+    border-radius: 8px;
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.65),
+        inset 0 0 12px rgba(80,65,40,.08);
+
+    overflow: hidden;
+}
+
+/* INSIDE MESSAGE */
+
+.inside-image-frame {
+    position: absolute;
+
+    top: var(--frame);
+    right: var(--frame);
+    bottom: var(--frame);
+    left: var(--frame);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    box-shadow:
+        0 2px 9px rgba(0,0,0,.18);
+}
+
+.inside-image-frame img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+/* FRONT COVER */
+
+.cover {
+    position: absolute;
+    inset: 0;
+
+    z-index: 10;
+
+    background: var(--card-stock);
+
+    border: 2px solid var(--card-edge);
+    border-radius: 8px;
+
+    transform-origin: center top;
+    transform: rotateX(0deg);
+
+    transform-style: preserve-3d;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    opacity: 1;
+
+    transition:
+        transform 3s cubic-bezier(.35,.05,.20,1),
+        opacity .45s ease 2.15s,
+        box-shadow 3s ease;
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,.65),
+        inset 0 0 12px rgba(80,65,40,.08);
+
+    overflow: hidden;
+}
+
+/* FRONT ARTWORK */
+
+.cover-image-frame {
+    position: absolute;
+
+    top: var(--frame);
+    right: var(--frame);
+    bottom: var(--frame);
+    left: var(--frame);
+
+    background: #111;
+
+    box-shadow:
+        0 2px 9px rgba(0,0,0,.20);
+
+    overflow: hidden;
+}
+
+.cover-image-frame img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* OPEN CARD */
+
+.card.open .cover {
+    transform: rotateX(115deg);
+    opacity: 0;
+
+    box-shadow:
+        0 -12px 32px rgba(0,0,0,.35);
+}
+
+/* OPENING SHADOW */
+
+.cover-shadow {
+    position: absolute;
+    inset: 0;
+
+    z-index: 5;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.50),
+            rgba(0,0,0,.10) 45%,
+            transparent 85%
+        );
+
+    opacity: 0;
+
+    transition:
+        opacity 2s ease;
+}
+
+.card.open .cover-shadow {
+    opacity: .35;
+}
+
+/* FOLD */
+
+.fold {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 3px;
+
+    background: rgba(255,255,255,.28);
+
+    opacity: 0;
+
+    transition: opacity .6s ease;
+
+    z-index: 20;
+    pointer-events: none;
+}
+
+.card.open .fold {
+    opacity: 1;
+}
+
+/* BACK TO GALLERY */
+
+.gallery-link {
+    margin-top: 28px;
+
+    color: #c8dcea;
+    text-decoration: none;
+
+    font-size: .9rem;
+}
+
+.gallery-link:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ACCESSIBILITY */
+
+.card:focus-visible {
+    outline: 3px solid #f5c768;
+    outline-offset: 8px;
+    border-radius: 8px;
+}
+
+/* PHONE */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .instructions {
+        font-size: .9rem;
+    }
+
+    :root {
+        --frame: 4%;
+    }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cover {
+        transition-duration: .2s;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Thinking of You</h1>
+
+<div class="month">
+    December 2026
+</div>
+
+<div
+    class="instructions"
+    id="instruction"
+>
+    Click or tap the card to open
+</div>
+
+<div class="stage">
+
+    <div
+        class="card"
+        id="card"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+        aria-label="Open Thinking of You card"
+    >
+
+        <!-- INSIDE CARD -->
+
+        <div class="inside">
+
+            <div class="inside-image-frame">
+
+                <img
+                    src="../../Dec%20Inner%20Message%201.jpg"
+                    alt="Inside message"
+                >
+
+            </div>
+
+        </div>
+
+        <!-- OPENING SHADOW -->
+
+        <div class="cover-shadow"></div>
+
+        <!-- FRONT CARD -->
+
+        <div class="cover">
+
+            <div class="cover-image-frame">
+
+                <img
+                    src="../../Designer%20(1).jpg"
+                    alt="Thinking of You illuminated bridge card"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="fold"></div>
+
+    </div>
+
+</div>
+
+<a class="gallery-link" href="../../">
+    Return to Card Gallery
+</a>
+
+<script>
+
+const card =
+    document.getElementById("card");
+
+const instruction =
+    document.getElementById("instruction");
+
+
+function toggleCard() {
+
+    const open =
+        card.classList.toggle("open");
+
+    if (open) {
+
+        instruction.textContent =
+            "Click or tap again to close";
+
+        card.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        card.setAttribute(
+            "aria-label",
+            "Close Thinking of You card"
+        );
+
+    } else {
+
+        instruction.textContent =
+            "Click or tap the card to open";
+
+        card.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        card.setAttribute(
+            "aria-label",
+            "Open Thinking of You card"
+        );
+
+    }
+
+}
+
+
+card.addEventListener(
+    "click",
+    toggleCard
+);
+
+
+card.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+
+            event.preventDefault();
+            toggleCard();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
