@@ -76,10 +76,11 @@ h1 {
 
     position: relative;
     cursor: pointer;
+
     transform-style: preserve-3d;
 }
 
-/* INSIDE CARD */
+/* INSIDE OF CARD */
 
 .inside {
     position: absolute;
@@ -97,7 +98,7 @@ h1 {
     overflow: hidden;
 }
 
-/* INSIDE MESSAGE */
+/* INSIDE MESSAGE FRAME */
 
 .inside-image-frame {
     position: absolute;
@@ -161,7 +162,7 @@ h1 {
     overflow: hidden;
 }
 
-/* FRONT ARTWORK */
+/* FRONT ARTWORK FRAME */
 
 .cover-image-frame {
     position: absolute;
@@ -191,7 +192,7 @@ h1 {
     -webkit-backface-visibility: hidden;
 }
 
-/* OPEN CARD */
+/* OPEN POSITION */
 
 .card.open .cover {
     transform: rotateX(115deg);
@@ -228,7 +229,7 @@ h1 {
     opacity: .35;
 }
 
-/* FOLD */
+/* FOLD LINE */
 
 .fold {
     position: absolute;
@@ -246,6 +247,7 @@ h1 {
     transition: opacity .6s ease;
 
     z-index: 20;
+
     pointer-events: none;
 }
 
@@ -253,7 +255,7 @@ h1 {
     opacity: 1;
 }
 
-/* BACK TO GALLERY */
+/* RETURN TO GALLERY */
 
 .gallery-link {
     margin-top: 28px;
@@ -264,9 +266,15 @@ h1 {
     font-size: .9rem;
 }
 
-.gallery-link:hover {
+.gallery-link:hover,
+.gallery-link:focus-visible {
     color: white;
     text-decoration: underline;
+}
+
+.gallery-link:focus-visible {
+    outline: 2px solid #f5c768;
+    outline-offset: 5px;
 }
 
 /* ACCESSIBILITY */
@@ -277,7 +285,7 @@ h1 {
     border-radius: 8px;
 }
 
-/* PHONE */
+/* SMALL SCREENS */
 
 @media (max-width: 600px) {
 
@@ -305,7 +313,6 @@ h1 {
     .cover {
         transition-duration: .2s;
     }
-
 }
 
 </style>
@@ -344,7 +351,7 @@ h1 {
             <div class="inside-image-frame">
 
                 <img
-                    src="../../Dec%20Inner%20Message%201.jpg"
+                    src="DecInside.jpg"
                     alt="Inside message"
                 >
 
@@ -356,14 +363,14 @@ h1 {
 
         <div class="cover-shadow"></div>
 
-        <!-- FRONT CARD -->
+        <!-- FRONT COVER -->
 
         <div class="cover">
 
             <div class="cover-image-frame">
 
                 <img
-                    src="../../Designer%20(1).jpg"
+                    src="DecCover.jpg"
                     alt="Thinking of You illuminated bridge card"
                 >
 
@@ -371,13 +378,18 @@ h1 {
 
         </div>
 
+        <!-- FOLD -->
+
         <div class="fold"></div>
 
     </div>
 
 </div>
 
-<a class="gallery-link" href="../../">
+<a
+    class="gallery-link"
+    href="../../index.html"
+>
     Return to Card Gallery
 </a>
 
@@ -388,7 +400,6 @@ const card =
 
 const instruction =
     document.getElementById("instruction");
-
 
 function toggleCard() {
 
@@ -426,15 +437,12 @@ function toggleCard() {
         );
 
     }
-
 }
-
 
 card.addEventListener(
     "click",
     toggleCard
 );
-
 
 card.addEventListener(
     "keydown",
