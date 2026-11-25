@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Thinking of You</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at center, #174b66 0%, #071723 55%, #02080d 100%);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 25px;
+}
+
+h1 {
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.instructions {
+    color: #c8dcea;
+    margin-bottom: 22px;
+    font-size: 1rem;
+}
+
+/* CARD */
+
+.card {
+    width: min(900px, 92vw);
+    cursor: pointer;
+    position: relative;
+}
+
+.card img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* FRONT */
+
+.front {
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.65),
+        0 0 30px rgba(92,190,255,.15);
+
+    transition:
+        opacity .7s ease,
+        transform .7s ease;
+}
+
+/* INSIDE */
+
+.inside {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    transform: scale(.96);
+
+    transition:
+        opacity .7s ease,
+        transform .7s ease;
+
+    pointer-events: none;
+}
+
+.inside img {
+    border-radius: 6px;
+    box-shadow: 0 20px 55px rgba(0,0,0,.65);
+}
+
+/* OPEN STATE */
+
+.card.open .front {
+    opacity: 0;
+    transform: scale(.96);
+}
+
+.card.open .inside {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* SMALL SCREENS */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .instructions {
+        font-size: .9rem;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Thinking of You</h1>
+
+<div class="instructions" id="instruction">
+    Click or tap the card to open
+</div>
+
+<div
+    class="card"
+    id="card"
+    role="button"
+    tabindex="0"
+    aria-label="Open Thinking of You card"
+>
+
+    <div class="front">
+        <img
+            src="Designer%20(1).jpg"
+            alt="Thinking of You illuminated bridge card"
+        >
+    </div>
+
+    <div class="inside">
+        <img
+            src="Dec%20Inner%20Message%201.jpg"
+            alt="Inside message"
+        >
+    </div>
+
+</div>
+
+<script>
+
+const card = document.getElementById("card");
+const instruction = document.getElementById("instruction");
+
+function toggleCard() {
+
+    card.classList.toggle("open");
+
+    if (card.classList.contains("open")) {
+        instruction.textContent = "Click or tap again to close";
+        card.setAttribute("aria-label", "Close Thinking of You card");
+    } else {
+        instruction.textContent = "Click or tap the card to open";
+        card.setAttribute("aria-label", "Open Thinking of You card");
+    }
+}
+
+card.addEventListener("click", toggleCard);
+
+card.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleCard();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
