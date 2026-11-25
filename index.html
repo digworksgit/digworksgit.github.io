@@ -7,7 +7,6 @@
 <title>Thinking of You</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
@@ -19,19 +18,17 @@ body {
         radial-gradient(circle at center, #174b66 0%, #071723 55%, #02080d 100%);
     font-family: Arial, Helvetica, sans-serif;
     color: white;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     padding: 25px;
 }
 
 h1 {
     font-weight: 300;
     font-size: 1.5rem;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
 }
 
 .instructions {
@@ -40,75 +37,110 @@ h1 {
     font-size: 1rem;
 }
 
-/* CARD */
-
-.card {
+/* Card stage provides 3-D perspective */
+.card-stage {
     width: min(900px, 92vw);
-    cursor: pointer;
+    perspective: 1800px;
+}
+
+/* The complete card */
+.card {
     position: relative;
-}
-
-.card img {
-    display: block;
     width: 100%;
-    height: auto;
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    transform-style: preserve-3d;
 }
 
-/* FRONT */
-
-.front {
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow:
-        0 20px 55px rgba(0,0,0,.65),
-        0 0 30px rgba(92,190,255,.15);
-
-    transition:
-        opacity .7s ease,
-        transform .7s ease;
-}
-
-/* INSIDE */
-
+/* Inside message sits underneath */
 .inside {
     position: absolute;
     inset: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    opacity: 0;
-    transform: scale(.96);
-
-    transition:
-        opacity .7s ease,
-        transform .7s ease;
-
-    pointer-events: none;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.65),
+        0 0 30px rgba(92,190,255,.10);
 }
 
 .inside img {
-    border-radius: 6px;
-    box-shadow: 0 20px 55px rgba(0,0,0,.65);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
-/* OPEN STATE */
+/* Front cover */
+.front {
+    position: absolute;
+    inset: 0;
+    transform-origin: bottom center;
+    transform-style: preserve-3d;
 
+    transition:
+        transform 1.15s cubic-bezier(.45,.05,.20,1),
+        box-shadow 1.15s ease;
+
+    z-index: 2;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.70),
+        0 0 30px rgba(92,190,255,.15);
+
+    backface-visibility: hidden;
+}
+
+.front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* OPEN CARD:
+   bottom edge acts as the hinge */
 .card.open .front {
+    transform: rotateX(160deg);
+
+    box-shadow:
+        0 -15px 35px rgba(0,0,0,.45),
+        0 5px 15px rgba(0,0,0,.25);
+}
+
+/* subtle highlight along fold */
+.card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+
+    background: rgba(255,255,255,.18);
+
     opacity: 0;
-    transform: scale(.96);
+    transition: opacity .5s ease;
+
+    z-index: 3;
+    pointer-events: none;
 }
 
-.card.open .inside {
+.card.open::after {
     opacity: 1;
-    transform: scale(1);
 }
 
-/* SMALL SCREENS */
+/* Keyboard focus */
+.card:focus-visible {
+    outline: 3px solid #f5c768;
+    outline-offset: 8px;
+    border-radius: 8px;
+}
 
 @media (max-width: 600px) {
-
     body {
         padding: 15px;
     }
@@ -120,9 +152,14 @@ h1 {
     .instructions {
         font-size: .9rem;
     }
-
 }
 
+/* Respect accessibility preference */
+@media (prefers-reduced-motion: reduce) {
+    .front {
+        transition-duration: .15s;
+    }
+}
 </style>
 </head>
 
@@ -134,59 +171,61 @@ h1 {
     Click or tap the card to open
 </div>
 
-<div
-    class="card"
-    id="card"
-    role="button"
-    tabindex="0"
-    aria-label="Open Thinking of You card"
->
+<div class="card-stage">
 
-    <div class="front">
-        <img
-            src="Designer%20(1).jpg"
-            alt="Thinking of You illuminated bridge card"
-        >
-    </div>
+    <div
+        class="card"
+        id="card"
+        role="button"
+        tabindex="0"
+        aria-label="Open Thinking of You card"
+        aria-expanded="false"
+    >
 
-    <div class="inside">
-        <img
-            src="Dec%20Inner%20Message%201.jpg"
-            alt="Inside message"
-        >
+        <div class="inside">
+            <img
+                src="Dec%20Inner%20Message%201.jpg"
+                alt="Inside message"
+            >
+        </div>
+
+        <div class="front">
+            <img
+                src="Designer%20(1).jpg"
+                alt="Thinking of You illuminated bridge card"
+            >
+        </div>
+
     </div>
 
 </div>
 
 <script>
-
 const card = document.getElementById("card");
 const instruction = document.getElementById("instruction");
 
 function toggleCard() {
+    const isOpen = card.classList.toggle("open");
 
-    card.classList.toggle("open");
-
-    if (card.classList.contains("open")) {
+    if (isOpen) {
         instruction.textContent = "Click or tap again to close";
         card.setAttribute("aria-label", "Close Thinking of You card");
+        card.setAttribute("aria-expanded", "true");
     } else {
         instruction.textContent = "Click or tap the card to open";
         card.setAttribute("aria-label", "Open Thinking of You card");
+        card.setAttribute("aria-expanded", "false");
     }
 }
 
 card.addEventListener("click", toggleCard);
 
 card.addEventListener("keydown", function(event) {
-
     if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         toggleCard();
     }
-
 });
-
 </script>
 
 </body>
